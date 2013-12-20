@@ -100,4 +100,16 @@
 
 }
 
+- (NSString *)titleForIndex:(NSUInteger)index
+{
+    NSDictionary *dataSourceItem = [self.dataSource objectAtIndex:index];
+    return [dataSourceItem valueForKey:@"title"];
+}
+
+- (NSString *)bodyForIndex:(NSUInteger)index
+{
+    NSDictionary *dataSourceItem = [self.dataSource objectAtIndex:index];
+    return [dataSourceItem valueForKey:@"body"];
+}
+
 @end

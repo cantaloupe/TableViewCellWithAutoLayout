@@ -29,6 +29,7 @@
 #import "RJTableViewCell.h"
 
 static NSString *CellIdentifier = @"CellIdentifier";
+static CGFloat kLineSpacing = 10.0f;
 
 @interface RJTableViewController ()
 
@@ -140,10 +141,32 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     [cell updateFonts];
     
-    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-
-    cell.titleLabel.text =  [dataSourceItem valueForKey:@"title"];
-    cell.bodyLabel.text = [dataSourceItem valueForKey:@"body"];
+    //
+    // It is unfortunate making autoLayout work with UITableView/UITableCell requires a duplication of building of strings in
+    // – tableView:heightForRowAtIndexPath: as well as method tableView:cellForRowAtIndexPath: So be aware if you see unexpected
+    // behavior, check to see the building of titleText and bodyText is identical in both methods.
+    //
+    NSString *titleText = [self.model titleForIndex:indexPath.row];
+    NSMutableAttributedString *titleAttributedText = [[NSMutableAttributedString alloc] initWithString:titleText];
+    NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [titleParagraphStyle setLineSpacing:3.0f];
+    [titleAttributedText addAttribute:NSParagraphStyleAttributeName value:titleParagraphStyle range:NSMakeRange(0, titleText.length)];
+    cell.titleLabel.attributedText = titleAttributedText; // Yes, darned silly to set leading of a single line textField but we aim for consistancy.
+    
+    NSString *bodyText = [self.model bodyForIndex:indexPath.row];
+    NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
+    NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [bodyParagraphStyle setLineSpacing:kLineSpacing];
+    [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
+    cell.bodyLabel.attributedText = bodyAttributedText;
+    
+    // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
+    // So if you simply want to use a regular string with default leading, comment out the text above and uncomment
+    // the following code, keeping in mind you'll need to duplicate building of string in method tableView:heightForRowAtIndexPath:
+    /*
+     cell.bodyLabel.text = [self.model bodyForIndex:indexPath.row];
+     cell.titleLabel.text = [self.model titleForIndex:indexPath.row];
+     */
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
@@ -164,10 +187,34 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     [cell updateFonts];
     
-    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-    cell.titleLabel.text =  [dataSourceItem valueForKey:@"title"];
-    cell.bodyLabel.text = [dataSourceItem valueForKey:@"body"];
+    //
+    // It is unfortunate making autoLayout work with UITableView/UITableCell requires a duplication of building of strings in
+    // – tableView:heightForRowAtIndexPath: as well as method tableView:cellForRowAtIndexPath: So be aware if you see unexpected
+    // behavior, check to see the building of titleText and bodyText is identical in both methods.
+    //
+    NSString *titleText = [self.model titleForIndex:indexPath.row];
+    NSMutableAttributedString *titleAttributedText = [[NSMutableAttributedString alloc] initWithString:titleText];
+    NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [titleParagraphStyle setLineSpacing:3.0f];
+    [titleAttributedText addAttribute:NSParagraphStyleAttributeName value:titleParagraphStyle range:NSMakeRange(0, titleText.length)];
+    cell.titleLabel.attributedText = titleAttributedText; // Yes, darned silly to set leading of a single line textField but we aim for consistancy.
     
+    NSString *bodyText = [self.model bodyForIndex:indexPath.row];
+    NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
+    NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [bodyParagraphStyle setLineSpacing:kLineSpacing];
+    [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
+    cell.bodyLabel.attributedText = bodyAttributedText;
+    
+    // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
+    // So if you simply want to use a regular string with default leading, comment out the text above and uncomment
+    // the following code, keeping in mind you'll need to duplicate building of string in method tableView:heightForRowAtIndexPath:
+    /*
+     cell.bodyLabel.text = [self.model bodyForIndex:indexPath.row];
+     cell.titleLabel.text = [self.model titleForIndex:indexPath.row];
+     */
+    
+    // Update Constraints here
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
     
@@ -196,6 +243,17 @@ static NSString *CellIdentifier = @"CellIdentifier";
     } else {
         return 500.0f;
     }
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    //
+    // I've notice a bug when rotating iOS device. Cells with multi-line labels will not compress when entering landscape mode
+    // leaving a lot of extra white space at top and bottom of the cell.  Must circle back and correct this behavior. Suspect
+    // this is happening in tableView:estimatedHeightForRowAtIndexPath which may need to be re-called programatically.
+    //
+    [self.tableView setNeedsUpdateConstraints];
+    [self.tableView updateConstraintsIfNeeded];
 }
 
 @end

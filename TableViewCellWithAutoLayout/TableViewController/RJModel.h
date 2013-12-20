@@ -34,4 +34,8 @@
 
 - (void)addSingleItemToDataSource;
 
+- (NSString *)titleForIndex:(NSUInteger)index;
+
+- (NSString *)bodyForIndex:(NSUInteger)index;
+
 @end
