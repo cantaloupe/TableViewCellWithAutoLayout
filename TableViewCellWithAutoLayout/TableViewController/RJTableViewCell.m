@@ -26,8 +26,6 @@
 
 #import "RJTableViewCell.h"
 
-#define kLabelHorizontalInsets 20.0f
-
 @interface RJTableViewCell ()
 
 @property (nonatomic, assign) BOOL didSetupConstraints;
@@ -36,10 +34,11 @@
 
 @implementation RJTableViewCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        // Initialization code
+        
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.titleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -66,8 +65,7 @@
     return self;
 }
 
-- (void)updateConstraints
-{
+- (void)updateConstraints {
     [super updateConstraints];
     
     if (self.didSetupConstraints) return;

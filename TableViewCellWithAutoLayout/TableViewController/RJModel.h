@@ -28,10 +28,8 @@
 
 @interface RJModel : NSObject
 
-@property (nonatomic, strong) NSMutableArray *dataSource;
+@property (nonatomic, strong) NSArray *dataSource;
 
 - (void)populateDataSource;
-
-- (void)addSingleItemToDataSource;
 
 @end
