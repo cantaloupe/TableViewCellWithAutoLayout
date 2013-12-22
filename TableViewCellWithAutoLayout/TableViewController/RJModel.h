@@ -38,4 +38,6 @@
 
 - (NSString *)bodyForIndex:(NSUInteger)index;
 
+- (NSString *)footnoteForIndex:(NSUInteger)index;
+
 @end

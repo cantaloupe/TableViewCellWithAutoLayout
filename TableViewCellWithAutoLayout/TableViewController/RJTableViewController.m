@@ -160,6 +160,8 @@ static CGFloat kLineSpacing = 10.0f;
     [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
     cell.bodyLabel.attributedText = bodyAttributedText;
     
+    cell.footnoteLabel.text = [self.model footnoteForIndex:indexPath.row];
+    
     // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
     // So if you simply want to use a regular string with default leading, comment out the text above and uncomment
     // the following code, keeping in mind you'll need to duplicate building of string in method tableView:heightForRowAtIndexPath:
@@ -205,6 +207,9 @@ static CGFloat kLineSpacing = 10.0f;
     [bodyParagraphStyle setLineSpacing:kLineSpacing];
     [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
     cell.bodyLabel.attributedText = bodyAttributedText;
+    
+    cell.footnoteLabel.text = [self.model footnoteForIndex:indexPath.row];
+
     
     // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
     // So if you simply want to use a regular string with default leading, comment out the text above and uncomment

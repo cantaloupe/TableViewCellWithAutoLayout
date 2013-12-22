@@ -50,16 +50,26 @@
         
         self.bodyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.bodyLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.bodyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//        [self.bodyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
         [self.bodyLabel setLineBreakMode:NSLineBreakByTruncatingTail];
         [self.bodyLabel setNumberOfLines:0];
         [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
         [self.bodyLabel setTextColor:[UIColor darkGrayColor]];
         [self.bodyLabel setBackgroundColor:[UIColor clearColor]];
+        
+        self.footnoteLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.footnoteLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.footnoteLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        [self.footnoteLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.footnoteLabel setNumberOfLines:0];
+        [self.footnoteLabel setTextAlignment:NSTextAlignmentLeft];
+        [self.footnoteLabel setTextColor:[UIColor darkGrayColor]];
+        [self.footnoteLabel setBackgroundColor:[UIColor clearColor]];
 
         [self.contentView addSubview:self.titleLabel];
         [self.contentView addSubview:self.bodyLabel];
-        
+        [self.contentView addSubview:self.footnoteLabel];
+
         [self updateFonts];
     }
     
@@ -128,8 +138,47 @@
                                       multiplier:1.0f
                                       constant:-kLabelHorizontalInsets]];
     
+//    [self.contentView  addConstraint:[NSLayoutConstraint
+//                                      constraintWithItem:self.bodyLabel
+//                                      attribute:NSLayoutAttributeBottom
+//                                      relatedBy:NSLayoutRelationEqual
+//                                      toItem:self.contentView
+//                                      attribute:NSLayoutAttributeBottom
+//                                      multiplier:1.0f
+//                                      constant:-(kLabelHorizontalInsets / 2)]];
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     [self.contentView  addConstraint:[NSLayoutConstraint
-                                      constraintWithItem:self.bodyLabel
+                                      constraintWithItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeLeading
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.contentView
+                                      attribute:NSLayoutAttributeLeading
+                                      multiplier:1.0f
+                                      constant:kLabelHorizontalInsets]];
+    
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeTop
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.bodyLabel
+                                      attribute:NSLayoutAttributeBottom
+                                      multiplier:1.0f
+                                      constant:(kLabelHorizontalInsets / 4)]];
+    
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeTrailing
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.contentView
+                                      attribute:NSLayoutAttributeTrailing
+                                      multiplier:1.0f
+                                      constant:-kLabelHorizontalInsets]];
+    
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.footnoteLabel
                                       attribute:NSLayoutAttributeBottom
                                       relatedBy:NSLayoutRelationEqual
                                       toItem:self.contentView
@@ -144,6 +193,7 @@
 {
     self.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     self.bodyLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
+    self.footnoteLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
