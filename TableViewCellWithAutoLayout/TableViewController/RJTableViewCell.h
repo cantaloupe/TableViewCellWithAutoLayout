@@ -26,10 +26,14 @@
 
 #import <UIKit/UIKit.h>
 
+#define kLabelHorizontalInsets 20.0f
+
 @interface RJTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *bodyLabel;
+@property (strong, nonatomic) IBOutlet UILabel *footnoteLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *imageViewForGoldStar;
 
 - (void)updateFonts;
 

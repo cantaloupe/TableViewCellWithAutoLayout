@@ -26,8 +26,6 @@
 
 #import "RJTableViewCell.h"
 
-#define kLabelHorizontalInsets 20.0f
-
 @interface RJTableViewCell ()
 
 @property (nonatomic, assign) BOOL didSetupConstraints;
@@ -40,6 +38,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        // Initialization code
+        
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.titleLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -56,10 +56,26 @@
         [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
         [self.bodyLabel setTextColor:[UIColor darkGrayColor]];
         [self.bodyLabel setBackgroundColor:[UIColor clearColor]];
+        
+        self.footnoteLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.footnoteLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+//        [self.footnoteLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//        [self.footnoteLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+
+        [self.footnoteLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.footnoteLabel setNumberOfLines:1];
+        [self.footnoteLabel setTextColor:[UIColor blackColor]];
+        [self.footnoteLabel setBackgroundColor:[UIColor clearColor]];
+        
+        self.imageViewForGoldStar = [[UIImageView alloc] initWithFrame:CGRectZero];
+        [self.imageViewForGoldStar setTranslatesAutoresizingMaskIntoConstraints:NO];
+        self.imageViewForGoldStar.contentMode = UIViewContentModeCenter;
 
         [self.contentView addSubview:self.titleLabel];
         [self.contentView addSubview:self.bodyLabel];
-        
+        [self.contentView addSubview:self.footnoteLabel];
+        [self.contentView addSubview:self.imageViewForGoldStar];
+
         [self updateFonts];
     }
     
@@ -128,8 +144,30 @@
                                       multiplier:1.0f
                                       constant:-kLabelHorizontalInsets]];
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     [self.contentView  addConstraint:[NSLayoutConstraint
-                                      constraintWithItem:self.bodyLabel
+                                      constraintWithItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeTop
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.bodyLabel
+                                      attribute:NSLayoutAttributeBottom
+                                      multiplier:1.0f
+                                      constant:(kLabelHorizontalInsets / 4)]];
+    
+    // Hang the footnoteLabel on right side of contentView
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeTrailing
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.contentView
+                                      attribute:NSLayoutAttributeTrailing
+                                      multiplier:1.0f
+                                      constant:-kLabelHorizontalInsets]];
+    
+    // Whatever the bottom object is, but sure to attatch it to bottom of contentView so cell expands automatically.
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.footnoteLabel
                                       attribute:NSLayoutAttributeBottom
                                       relatedBy:NSLayoutRelationEqual
                                       toItem:self.contentView
@@ -137,6 +175,31 @@
                                       multiplier:1.0f
                                       constant:-(kLabelHorizontalInsets / 2)]];
     
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // And for a bit of fanciness, how about a nice gold star placed at left of self.footnoteLabel
+    
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.imageViewForGoldStar
+                                      attribute:NSLayoutAttributeTop
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeTop
+                                      multiplier:1.0f
+                                      constant:0.0f]];
+    
+    [self.contentView  addConstraint:[NSLayoutConstraint
+                                      constraintWithItem:self.imageViewForGoldStar
+                                      attribute:NSLayoutAttributeTrailing
+                                      relatedBy:NSLayoutRelationEqual
+                                      toItem:self.footnoteLabel
+                                      attribute:NSLayoutAttributeLeading
+                                      multiplier:1.0f
+                                      constant:-4.0f]];
+    
+
     self.didSetupConstraints = YES;
 }
 
@@ -144,9 +207,12 @@
 {
     self.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     self.bodyLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
+    self.footnoteLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
     [super setSelected:selected animated:animated];
     // Configure the view for the selected state
 }

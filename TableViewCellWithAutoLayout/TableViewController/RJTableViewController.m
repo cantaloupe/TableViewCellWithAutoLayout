@@ -32,14 +32,11 @@ static NSString *CellIdentifier = @"CellIdentifier";
 static CGFloat kLineSpacing = 10.0f;
 
 @interface RJTableViewController ()
-
 @property (strong, nonatomic) RJModel *model;
-
 // This property is used to work around the constraint exception that is thrown if the
 // estimated row height for an inserted row is greater than the actual height for that row.
 // See: https://github.com/caoimghgin/TableViewCellWithAutoLayout/issues/6
 @property (assign, nonatomic) BOOL isInsertingRow;
-
 @end
 
 @implementation RJTableViewController
@@ -122,67 +119,64 @@ static CGFloat kLineSpacing = 10.0f;
     
     self.isInsertingRow = NO;
 }
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // Return the number of rows in the section.
     return [self.model.dataSource count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     RJTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     [cell updateFonts];
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // IMPORTANT: This block of code must be duplicated within tableView:heightForRowAtIndexPath method
     
-    //
-    // It is unfortunate making autoLayout work with UITableView/UITableCell requires a duplication of building of strings in
-    // – tableView:heightForRowAtIndexPath: as well as method tableView:cellForRowAtIndexPath: So be aware if you see unexpected
-    // behavior, check to see the building of titleText and bodyText is identical in both methods.
-    //
-    NSString *titleText = [self.model titleForIndex:indexPath.row];
-    NSMutableAttributedString *titleAttributedText = [[NSMutableAttributedString alloc] initWithString:titleText];
-    NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [titleParagraphStyle setLineSpacing:3.0f];
-    [titleAttributedText addAttribute:NSParagraphStyleAttributeName value:titleParagraphStyle range:NSMakeRange(0, titleText.length)];
-    cell.titleLabel.attributedText = titleAttributedText; // Yes, darned silly to set leading of a single line textField but we aim for consistancy.
+    // You can set the text of labels here, or comment out these three lines and uncomment the following lines...
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+    cell.bodyLabel.text =  [self.model bodyForIndex:indexPath.row];
+    cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
     
-    NSString *bodyText = [self.model bodyForIndex:indexPath.row];
-    NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
-    NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [bodyParagraphStyle setLineSpacing:kLineSpacing];
-    [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
-    cell.bodyLabel.attributedText = bodyAttributedText;
     
-    // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
-    // So if you simply want to use a regular string with default leading, comment out the text above and uncomment
-    // the following code, keeping in mind you'll need to duplicate building of string in method tableView:heightForRowAtIndexPath:
+    // ...uncomment the following lines to experiment with leading of bodyLabel using kLineSpacing defined at top of class.
     /*
-     cell.bodyLabel.text = [self.model bodyForIndex:indexPath.row];
-     cell.titleLabel.text = [self.model titleForIndex:indexPath.row];
+     cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+     
+     NSString *bodyText = [self.model bodyForIndex:indexPath.row];
+     NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
+     NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+     [bodyParagraphStyle setLineSpacing:kLineSpacing];
+     [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
+     cell.bodyLabel.attributedText = bodyAttributedText;
+     
+     cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
      */
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Add a gold star here, or don't.
+    cell.imageViewForGoldStar.image = [UIImage imageNamed:@"goldStar"];
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
-    
-    // Since we have multi-line labels, do an initial layout pass and then set the preferredMaxLayoutWidth
-    // based on their width so they will wrap text and take on the correct height
-    [cell.contentView setNeedsLayout];
-    [cell.contentView layoutIfNeeded];
-    cell.bodyLabel.preferredMaxLayoutWidth = CGRectGetWidth(cell.bodyLabel.frame);
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   
     RJTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     [cell updateFonts];
@@ -198,6 +192,20 @@ static CGFloat kLineSpacing = 10.0f;
     [titleParagraphStyle setLineSpacing:3.0f];
     [titleAttributedText addAttribute:NSParagraphStyleAttributeName value:titleParagraphStyle range:NSMakeRange(0, titleText.length)];
     cell.titleLabel.attributedText = titleAttributedText; // Yes, darned silly to set leading of a single line textField but we aim for consistancy.
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // IMPORTANT: This block of code must be duplicated within tableView:cellForRowAtIndexPath method
+    
+    // You can set the text of labels here, or comment out these three lines and uncomment the following lines...
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+    cell.bodyLabel.text =  [self.model bodyForIndex:indexPath.row];
+    cell.footnoteLabel.text = [self.model footnoteForIndex:indexPath.row];
+
+   
+    // ...uncomment the following lines to experiment with leading of bodyLabel using kLineSpacing defined at top of class.
+    /*
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+
     
     NSString *bodyText = [self.model bodyForIndex:indexPath.row];
     NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
@@ -205,6 +213,16 @@ static CGFloat kLineSpacing = 10.0f;
     [bodyParagraphStyle setLineSpacing:kLineSpacing];
     [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
     cell.bodyLabel.attributedText = bodyAttributedText;
+
+
+    
+    cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
+    */
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kLabelHorizontalInsets * 2.0f);
     
     // No, you don't need to use an NSAttributedString, but it's helpful if you want to adjust leading (line spacing).
     // So if you simply want to use a regular string with default leading, comment out the text above and uncomment
@@ -214,6 +232,18 @@ static CGFloat kLineSpacing = 10.0f;
      cell.titleLabel.text = [self.model titleForIndex:indexPath.row];
      */
     
+    // Update Constraints here
+    [cell setNeedsUpdateConstraints];
+    [cell updateConstraintsIfNeeded];
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
+    
+    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    
+    return height;
+    
+    /*
+     // Found this code to cause issue where the cell contentView would not compress to the cells contents.
     // Update Constraints here
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
@@ -228,8 +258,9 @@ static CGFloat kLineSpacing = 10.0f;
     [cell.contentView layoutIfNeeded];
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-    
     return height;
+    */
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -255,5 +286,56 @@ static CGFloat kLineSpacing = 10.0f;
     [self.tableView setNeedsUpdateConstraints];
     [self.tableView updateConstraintsIfNeeded];
 }
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }   
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a story board-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+
+ */
 
 @end
