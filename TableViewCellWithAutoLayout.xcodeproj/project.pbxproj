@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99AD469018673EA6006F5B8D /* RJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 99AD468F18673EA6006F5B8D /* RJModel.m */; };
+		99AD4694186746F7006F5B8D /* goldStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 99AD4692186746F7006F5B8D /* goldStar.png */; };
+		99AD4695186746F7006F5B8D /* goldStar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 99AD4693186746F7006F5B8D /* goldStar@2x.png */; };
 		99BCDCA518008C0000B8E66B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99BCDCA418008C0000B8E66B /* Foundation.framework */; };
 		99BCDCA718008C0000B8E66B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99BCDCA618008C0000B8E66B /* CoreGraphics.framework */; };
 		99BCDCA918008C0000B8E66B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99BCDCA818008C0000B8E66B /* UIKit.framework */; };
@@ -19,7 +22,6 @@
 		99BCDCC018008C0000B8E66B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99BCDCA818008C0000B8E66B /* UIKit.framework */; };
 		99BCDCC818008C0000B8E66B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99BCDCC618008C0000B8E66B /* InfoPlist.strings */; };
 		99BCDCCA18008C0000B8E66B /* TableViewCellWithAutoLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BCDCC918008C0000B8E66B /* TableViewCellWithAutoLayoutTests.m */; };
-		99BCDCDA18008C1700B8E66B /* RJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BCDCD518008C1700B8E66B /* RJModel.m */; };
 		99BCDCDB18008C1700B8E66B /* RJTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BCDCD718008C1700B8E66B /* RJTableViewCell.m */; };
 		99BCDCDC18008C1700B8E66B /* RJTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99BCDCD918008C1700B8E66B /* RJTableViewController.m */; };
 /* End PBXBuildFile section */
@@ -35,6 +37,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		99AD468E18673EA6006F5B8D /* RJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModel.h; sourceTree = "<group>"; };
+		99AD468F18673EA6006F5B8D /* RJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModel.m; sourceTree = "<group>"; };
+		99AD4692186746F7006F5B8D /* goldStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goldStar.png; sourceTree = "<group>"; };
+		99AD4693186746F7006F5B8D /* goldStar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "goldStar@2x.png"; sourceTree = "<group>"; };
 		99BCDCA118008C0000B8E66B /* TableViewCellWithAutoLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TableViewCellWithAutoLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99BCDCA418008C0000B8E66B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		99BCDCA618008C0000B8E66B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -51,8 +57,6 @@
 		99BCDCC518008C0000B8E66B /* TableViewCellWithAutoLayoutTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TableViewCellWithAutoLayoutTests-Info.plist"; sourceTree = "<group>"; };
 		99BCDCC718008C0000B8E66B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		99BCDCC918008C0000B8E66B /* TableViewCellWithAutoLayoutTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TableViewCellWithAutoLayoutTests.m; sourceTree = "<group>"; };
-		99BCDCD418008C1700B8E66B /* RJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModel.h; sourceTree = "<group>"; };
-		99BCDCD518008C1700B8E66B /* RJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModel.m; sourceTree = "<group>"; };
 		99BCDCD618008C1700B8E66B /* RJTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJTableViewCell.h; sourceTree = "<group>"; };
 		99BCDCD718008C1700B8E66B /* RJTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJTableViewCell.m; sourceTree = "<group>"; };
 		99BCDCD818008C1700B8E66B /* RJTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJTableViewController.h; sourceTree = "<group>"; };
@@ -83,6 +87,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99AD4691186746F7006F5B8D /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				99AD4692186746F7006F5B8D /* goldStar.png */,
+				99AD4693186746F7006F5B8D /* goldStar@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		99BCDC9818008C0000B8E66B = {
 			isa = PBXGroup;
 			children = (
@@ -128,6 +141,7 @@
 		99BCDCAB18008C0000B8E66B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				99AD4691186746F7006F5B8D /* Images */,
 				99BCDCAC18008C0000B8E66B /* TableViewCellWithAutoLayout-Info.plist */,
 				99BCDCAD18008C0000B8E66B /* InfoPlist.strings */,
 				99BCDCB018008C0000B8E66B /* main.m */,
@@ -157,8 +171,8 @@
 		99BCDCD318008C1700B8E66B /* TableViewController */ = {
 			isa = PBXGroup;
 			children = (
-				99BCDCD418008C1700B8E66B /* RJModel.h */,
-				99BCDCD518008C1700B8E66B /* RJModel.m */,
+				99AD468E18673EA6006F5B8D /* RJModel.h */,
+				99AD468F18673EA6006F5B8D /* RJModel.m */,
 				99BCDCD618008C1700B8E66B /* RJTableViewCell.h */,
 				99BCDCD718008C1700B8E66B /* RJTableViewCell.m */,
 				99BCDCD818008C1700B8E66B /* RJTableViewController.h */,
@@ -243,7 +257,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99AD4695186746F7006F5B8D /* goldStar@2x.png in Resources */,
 				99BCDCAF18008C0000B8E66B /* InfoPlist.strings in Resources */,
+				99AD4694186746F7006F5B8D /* goldStar.png in Resources */,
 				99BCDCB718008C0000B8E66B /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,9 +280,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				99BCDCB518008C0000B8E66B /* RJAppDelegate.m in Sources */,
+				99AD469018673EA6006F5B8D /* RJModel.m in Sources */,
 				99BCDCDC18008C1700B8E66B /* RJTableViewController.m in Sources */,
 				99BCDCB118008C0000B8E66B /* main.m in Sources */,
-				99BCDCDA18008C1700B8E66B /* RJModel.m in Sources */,
 				99BCDCDB18008C1700B8E66B /* RJTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +486,7 @@
 				99BCDCCF18008C0000B8E66B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		99BCDCD018008C0000B8E66B /* Build configuration list for PBXNativeTarget "TableViewCellWithAutoLayoutTests" */ = {
 			isa = XCConfigurationList;
@@ -478,6 +495,7 @@
 				99BCDCD218008C0000B8E66B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

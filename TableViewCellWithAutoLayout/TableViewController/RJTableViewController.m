@@ -29,9 +29,14 @@
 #import "RJTableViewCell.h"
 
 static NSString *CellIdentifier = @"CellIdentifier";
+static CGFloat kLineSpacing = 10.0f; // static value for leading of bodyLabel
 
 @interface RJTableViewController ()
 @property (strong, nonatomic) RJModel *model;
+// This property is used to work around the constraint exception that is thrown if the
+// estimated row height for an inserted row is greater than the actual height for that row.
+// See: https://github.com/caoimghgin/TableViewCellWithAutoLayout/issues/6
+@property (assign, nonatomic) BOOL isInsertingRow;
 @end
 
 @implementation RJTableViewController
@@ -53,6 +58,10 @@ static NSString *CellIdentifier = @"CellIdentifier";
     [super viewDidLoad];
     
     [self.tableView registerClass:[RJTableViewCell class] forCellReuseIdentifier:CellIdentifier];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(clear:)];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addRow:)];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,6 +94,31 @@ static NSString *CellIdentifier = @"CellIdentifier";
     [self.tableView reloadData];
 }
 
+- (void)clear:(id)sender
+{
+    NSMutableArray *rowsToDelete = [NSMutableArray new];
+    for (NSUInteger i = 0; i < [self.model.dataSource count]; i++) {
+        [rowsToDelete addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    
+    self.model = [[RJModel alloc] init];
+    
+    [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [self.tableView reloadData];
+}
+
+- (void)addRow:(id)sender
+{
+    [self.model addSingleItemToDataSource];
+    
+    self.isInsertingRow = YES;
+    
+    NSIndexPath *lastIndexPath = [NSIndexPath indexPathForRow:[self.model.dataSource count] - 1 inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    self.isInsertingRow = NO;
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -106,10 +140,33 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     [cell updateFonts];
     
-    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-
-    cell.titleLabel.text =  [dataSourceItem valueForKey:@"title"];
-    cell.bodyLabel.text = [dataSourceItem valueForKey:@"body"];
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // IMPORTANT: This block of code must be duplicated within tableView:heightForRowAtIndexPath method
+    
+    // You can set the text of labels here, or comment out these three lines and uncomment the following lines...
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+    cell.bodyLabel.text =  [self.model bodyForIndex:indexPath.row];
+    cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
+    
+    
+    // ...uncomment the following lines to experiment with leading of bodyLabel using kLineSpacing defined at top of class.
+    /*
+     cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+     
+     NSString *bodyText = [self.model bodyForIndex:indexPath.row];
+     NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
+     NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+     [bodyParagraphStyle setLineSpacing:kLineSpacing];
+     [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
+     cell.bodyLabel.attributedText = bodyAttributedText;
+     
+     cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
+     */
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Add a gold star here, or don't.
+    cell.imageViewForGoldStar.image = [UIImage imageNamed:@"goldStar"];
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
@@ -124,10 +181,32 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     [cell updateFonts];
     
-    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-    cell.titleLabel.text =  [dataSourceItem valueForKey:@"title"];
-    cell.bodyLabel.text = [dataSourceItem valueForKey:@"body"];
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // IMPORTANT: This block of code must be duplicated within tableView:cellForRowAtIndexPath method
     
+    // You can set the text of labels here, or comment out these three lines and uncomment the following lines...
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+    cell.bodyLabel.text =  [self.model bodyForIndex:indexPath.row];
+    cell.footnoteLabel.text = [self.model footnoteForIndex:indexPath.row];
+
+   
+    // ...uncomment the following lines to experiment with leading of bodyLabel using kLineSpacing defined at top of class.
+    /*
+    cell.titleLabel.text =  [self.model titleForIndex:indexPath.row];
+    
+    NSString *bodyText = [self.model bodyForIndex:indexPath.row];
+    NSMutableAttributedString *bodyAttributedText = [[NSMutableAttributedString alloc] initWithString:bodyText];
+    NSMutableParagraphStyle *bodyParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [bodyParagraphStyle setLineSpacing:kLineSpacing];
+    [bodyAttributedText addAttribute:NSParagraphStyleAttributeName value:bodyParagraphStyle range:NSMakeRange(0, bodyText.length)];
+    cell.bodyLabel.attributedText = bodyAttributedText;
+    
+    cell.footnoteLabel.text =  [self.model footnoteForIndex:indexPath.row];
+    */
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kLabelHorizontalInsets * 2.0f);
     
     [cell setNeedsUpdateConstraints];
@@ -138,11 +217,39 @@ static NSString *CellIdentifier = @"CellIdentifier";
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
     
     return height;
+    
+    /*
+     // Found this code to cause issue where the cell contentView would not compress to the cells contents.
+    // Update Constraints here
+    [cell setNeedsUpdateConstraints];
+    [cell updateConstraintsIfNeeded];
+    
+    // Do the initial layout pass of the cell's contentView & subviews
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
+    
+    // Since we have multi-line labels, set the preferredMaxLayoutWidth now that their width has been determined,
+    // and then do a second layout pass so they can take on the correct height
+    cell.bodyLabel.preferredMaxLayoutWidth = CGRectGetWidth(cell.bodyLabel.frame);
+    [cell.contentView layoutIfNeeded];
+    
+    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    return height;
+    */
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 500.0f;
+    if (self.isInsertingRow) {
+        // A constraint exception will be thrown if the estimated row height for an inserted row is greater
+        // than the actual height for that row. In order to work around this, we return the actual height
+        // for the the row when inserting into the table view.
+        // See: https://github.com/caoimghgin/TableViewCellWithAutoLayout/issues/6
+        return [self tableView:tableView heightForRowAtIndexPath:indexPath];
+    } else {
+        return 500.0f;
+    }
 }
 
 /*
