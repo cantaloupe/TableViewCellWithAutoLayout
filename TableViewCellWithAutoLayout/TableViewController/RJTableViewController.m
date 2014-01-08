@@ -59,10 +59,20 @@ static CGFloat kLineSpacing = 10.0f;
     
     [self.tableView registerClass:[RJTableViewCell class] forCellReuseIdentifier:CellIdentifier];
     
+    UISegmentedControl *segmentedControl =  [[UISegmentedControl alloc] initWithItems:@[@"A-M", @"N-Z"]];
+    [segmentedControl addTarget:self
+                         action:@selector(segmentedControlSelectionDidChange:)
+               forControlEvents:UIControlEventValueChanged];
+    [segmentedControl setSelectedSegmentIndex:0];
+    [self segmentedControlSelectionDidChange:segmentedControl];
+
+    self.navigationItem.titleView = segmentedControl;
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(clear:)];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addRow:)];
 }
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -106,6 +116,14 @@ static CGFloat kLineSpacing = 10.0f;
     [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationAutomatic];
     
     [self.tableView reloadData];
+}
+
+- (void)segmentedControlSelectionDidChange:(UISegmentedControl *)sender {
+    
+    [self.model filterDataSourceBySegmentIndex:sender.selectedSegmentIndex];
+    [self.tableView reloadData];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    
 }
 
 - (void)addRow:(id)sender
