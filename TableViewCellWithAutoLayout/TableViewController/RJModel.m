@@ -65,6 +65,32 @@
     
 }
 
+
+- (void)filterDataSourceBySegmentIndex:(NSInteger)segmentIndex {
+    
+    [self populateDataSource];
+    
+    NSPredicate *alphaPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        unichar midpoint = [@"M" characterAtIndex:0];
+        
+        if (segmentIndex == 0) {
+            
+            return ([evaluatedObject[@"title"] characterAtIndex:0] <= midpoint);
+            
+        } else {
+            
+            return ([evaluatedObject[@"title"] characterAtIndex:0] > midpoint);
+        }
+        
+    }];
+    
+    [self.dataSource filterUsingPredicate:alphaPredicate];
+    [self.dataSource sortUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES] ]];
+    
+}
+
+
 - (void)addSingleItemToDataSource
 {
     
