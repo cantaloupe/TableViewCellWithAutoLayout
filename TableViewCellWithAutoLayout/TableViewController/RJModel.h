@@ -32,6 +32,8 @@
 
 - (void)populateDataSource;
 
+- (void)filterDataSourceBySegmentIndex:(NSInteger)segmentIndex;
+
 - (void)addSingleItemToDataSource;
 
 - (NSString *)titleForIndex:(NSUInteger)index;
